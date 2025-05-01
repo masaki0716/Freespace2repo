@@ -4,21 +4,29 @@ const url = require("url");
 // 非同期で接続プールを作成する関数
 async function createPool() {
     try {
-        const dbUrl = process.env.DB_URL; // 例: "mysql://user:password@host:port/database"
-        const parsedUrl = url.parse(dbUrl);
-        const [user, password] = parsedUrl.auth.split(":");
-        const database = parsedUrl.pathname.replace("/", "");
+        const dbUrl = process.env.DB_URL;
+        const parsedUrl = new URL(dbUrl); // ←ここ重要: `url.parse`は古い
 
         const pool = mysql.createPool({
             host: parsedUrl.hostname,
-            port: parsedUrl.port || 3306,
-            user,
-            password,
-            database,
+            port: parsedUrl.port,
+            user: parsedUrl.username,
+            password: parsedUrl.password,
+            database: parsedUrl.pathname.replace("/", ""),
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
         });
+
+        await pool.query("SELECT 1");
+        console.log("✅ MySQL connected");
+        return pool;
+    } catch (error) {
+        console.error("❌ DB Connection Failed:", error.message);
+        throw new Error("DB connection failed");
+    }
+}
+
         //         const pool = mysql.createPool({
 //     host: "localhost",
 //     user: "root",
@@ -28,14 +36,6 @@ async function createPool() {
 //     connectionLimit: 10,
 //     queueLimit: 0
 // });
-
-        await pool.query("SELECT 1"); // 接続確認
-        return pool;
-    } catch (error) {
-        console.error("DB Connection Failed: ", error);
-        throw new Error("DB connection failed");
-    }
-}
 
 
 // 非同期でプールを作成し、接続確認を行ったプールを利用
