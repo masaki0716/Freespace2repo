@@ -1,0 +1,106 @@
+body {
+    background-color: black;
+    color: orange;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* タブとサブタブ */
+  .tab, .subtab {
+    display: inline-block;
+    padding: 10px;
+    margin: 2px;
+    border: 1px solid orange;
+    cursor: pointer;
+    background-color: black;
+    color: orange;
+    box-shadow: 0 0 6px orange;
+    border-radius: 4px;
+    transition: box-shadow 0.3s; /* transitionをまとめる */
+  }
+  
+  /* ホバー時のスタイル */
+  .tab:hover, .subtab:hover {
+    box-shadow: 0 0 12px orange, 0 0 24px orange;
+  }
+  
+  /* アクティブなタブ */
+  .active {
+    background-color: #220000;
+    box-shadow: 0 0 16px orange;
+  }
+  
+  /* コンテンツ部分 */
+  .content {
+    display: none;
+    padding: 10px;
+    border: 1px solid orange;
+    background-color: black;
+    color: orange;
+    box-shadow: 0 0 30px orange;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  .subcontent {
+    display: none;
+    padding: 10px;
+    border: 1px solid black;
+    background-color: black;
+    color: orange;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  
+  .show {
+    display: block;
+  }
+  
+  /* コントロールボタン（＋−ボタン） */
+  .control-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-right: 8px;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+  }
+  
+  .control-buttons button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 1px 0;
+    font-size: 14px;
+    color: orange;
+    background-color: black;
+    border: 1px solid orange;
+    border-radius: 4px;
+    box-shadow: 0 0 6px orange;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .control-buttons button:hover {
+    box-shadow: 0 0 12px orange, 0 0 24px orange;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 80%;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid orange;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: black;
+}
+tr:nth-child(even) {
+    background-color:black;
+}
+button {
+    margin-top: 20px;
+}
+  

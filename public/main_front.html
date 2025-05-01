@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>単語帳</title>
+  <link rel="stylesheet" href="main_front_css.css">
+  
+</head>
+<body>
+
+<!-- テーマ操作ボタン -->
+<div>
+    <div style="display: flex; align-items: center;">
+        <span class="control-buttons">
+          <button id="addTheme"    type="button">+</button>
+          <button id="removeTheme" type="button">-</button>
+        </span>
+        <div id="themes" style="display: inline-block"></div>
+    </div>
+</div>
+
+<!-- テーマごとのシートエリア -->
+<div id="themeContents"></div>
+<script src="main_front_js.js"></script>
+</body>
+</html>
