@@ -4,25 +4,22 @@ const url = require("url");
 // 非同期で接続プールを作成する関数
 async function createPool() {
     try {
-        // DB_URL 環境変数から MySQL の接続情報を取得
-                const dbUrl = process.env.DB_URL; // 例: "mysql://user:password@host:port/database"
-                
-                // URLを解析して接続情報を抽出
-                const parsedUrl = url.parse(dbUrl);
-                const [user, password] = parsedUrl.auth.split(":");
-                
+        const dbUrl = process.env.DB_URL; // 例: "mysql://user:password@host:port/database"
+        const parsedUrl = url.parse(dbUrl);
+        const [user, password] = parsedUrl.auth.split(":");
+        const database = parsedUrl.pathname.replace("/", "");
+
         const pool = mysql.createPool({
-            host: process.env.DB_HOST,       // 環境変数に設定されたホスト名
-            user: process.env.DB_USER,       // 環境変数に設定されたユーザー名
-            password: process.env.DB_PASS,   // 環境変数に設定されたパスワード
-            database: process.env.DB_NAME,   // 環境変数に設定されたデータベース名
-            port: process.env.DB_PORT || 3306, // 環境変数に設定されたポート番号、デフォルトは 3306
+            host: parsedUrl.hostname,
+            port: parsedUrl.port || 3306,
+            user,
+            password,
+            database,
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
         });
-        
-//         const pool = mysql.createPool({
+        //         const pool = mysql.createPool({
 //     host: "localhost",
 //     user: "root",
 //     password: "Masaki.0716",
@@ -32,15 +29,14 @@ async function createPool() {
 //     queueLimit: 0
 // });
 
-        // データベース接続の確認
-        await pool.query("SELECT 1");
-        
-        return pool; // 正常に接続できれば pool を返す
+        await pool.query("SELECT 1"); // 接続確認
+        return pool;
     } catch (error) {
-        console.error("DB Connection Failed: ", error);  // エラーのログ出力
+        console.error("DB Connection Failed: ", error);
         throw new Error("DB connection failed");
     }
 }
+
 
 // 非同期でプールを作成し、接続確認を行ったプールを利用
 const poolPromise = createPool(); // 非同期で作成したプールを利用
