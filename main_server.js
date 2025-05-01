@@ -38,15 +38,24 @@ app.post("/create-theme", async (req, res) => {
 });
 
 // テーマ一覧取得
-app.get("/get-exsistingthemes", async (req, res) => {
-    try {
-        const themes = await getThemes();
-        res.json(themes);
-    } catch (error) {
-        console.error("テーマ一覧取得エラー:", error);
-        res.status(500).send("サーバーエラー");
-    }
+app.get("/get-existingthemes", async (req, res) => {
+  const connection = await pool.getConnection();
+
+  // ✅ themes テーブルがなければ作成
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS themes (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      table_name VARCHAR(255) NOT NULL,
+      date_created DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  // ✅ 既存テーマ一覧を取得
+  const [rows] = await connection.query("SELECT * FROM themes");
+  connection.release();
+  res.json(rows);
 });
+
 
 // テーマ内全データ取得
 app.get("/get-theme/:name", async (req, res) => {
