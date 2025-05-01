@@ -3,12 +3,14 @@
 
   async function loadThemes() {
     try {
-      const response = await fetch("/get-exsistingthemes"); // サーバーにリクエスト
+      const response = await fetch("/get-existingthemes"); // ← typo 修正済み
+// サーバーにリクエスト
       const themesList = await response.json(); // テーマのリストを受け取る
   
-      themesList.forEach(name => {
-        createTheme(name); // 各テーマのタブを作成
+      themesList.forEach(theme => {
+        createTheme(theme.table_name); // ← 正しいキーを参照
       });
+      
     } catch (error) {
       console.error("テーマのロードに失敗しました:", error);
     }

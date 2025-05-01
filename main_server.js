@@ -39,9 +39,9 @@ app.post("/create-theme", async (req, res) => {
 
 // テーマ一覧取得
 app.get("/get-existingthemes", async (req, res) => {
-  const connection = await pool.getConnection();
+  const realPool = await pool;
+  const connection = await realPool.getConnection();
 
-  // ✅ themes テーブルがなければ作成
   await connection.query(`
     CREATE TABLE IF NOT EXISTS themes (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,28 +50,29 @@ app.get("/get-existingthemes", async (req, res) => {
     );
   `);
 
-  // ✅ 既存テーマ一覧を取得
   const [rows] = await connection.query("SELECT * FROM themes");
   connection.release();
   res.json(rows);
 });
 
 
+
 // テーマ内全データ取得
 app.get("/get-theme/:name", async (req, res) => {
-    const { name } = req.params;
-    try {
-        const [rows] = await pool.query(`SELECT * FROM \`${name}\``);
-        console.log("Rows from database:", rows);
-        if (rows.length === 0) {
-            return res.status(404).send("No data found for this theme.");
-        }
-        res.json(rows);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send("❌ Error fetching data");
-    }
+  const { name } = req.params;
+  try {
+      const realPool = await pool;
+      const [rows] = await realPool.query(`SELECT * FROM \`${name}\``);
+      if (rows.length === 0) {
+          return res.status(404).send("No data found for this theme.");
+      }
+      res.json(rows);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).send("❌ Error fetching data");
+  }
 });
+
 
 // 新しいテーマ作成
 app.post("/create-newtheme", async (req, res) => {
@@ -108,33 +109,29 @@ const sequentialIndices = {};
 
 // GET /get-sequential/:name
 app.get("/get-sequential/:name", async (req, res) => {
+  const realPool = await pool;
   const tableName = req.params.name;
-  // 初回は ID=1
   let current = sequentialIndices[tableName] || 1;
 
   try {
-    // まず該当 ID のレコードを取得
-    const [rows] = await pool.query(
+    const [rows] = await realPool.query(
       `SELECT * FROM \`${tableName}\` WHERE id = ?`, 
       [current]
     );
 
-    // レコードがなければ、ID を 1 にリセットして再取得
     if (rows.length === 0) {
       current = 1;
-      const [resetRows] = await pool.query(
+      const [resetRows] = await realPool.query(
         `SELECT * FROM \`${tableName}\` WHERE id = ?`, 
         [current]
       );
       if (resetRows.length === 0) {
-        // テーブルにそもそも行がない場合
         return res.status(404).json({ message: "No word found" });
       }
-      sequentialIndices[tableName] = 2;  // 次は 2
+      sequentialIndices[tableName] = 2;
       return res.json(resetRows[0]);
     }
 
-    // 通常は取得できたレコードを返し、次は current+1
     sequentialIndices[tableName] = current + 1;
     return res.json(rows[0]);
 
@@ -143,7 +140,6 @@ app.get("/get-sequential/:name", async (req, res) => {
     return res.status(500).json({ error: "Error fetching word" });
   }
 });
-
 
 app.post("/generateQuestion", async (req, res) => {
     const { message, id } = req.body;          // id を受け取る

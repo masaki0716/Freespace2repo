@@ -14,7 +14,7 @@ async function createPool() {
             queueLimit: 0
         });
         
-        // const pool = mysql.createPool({
+//         const pool = mysql.createPool({
 //     host: "localhost",
 //     user: "root",
 //     password: "Masaki.0716",
