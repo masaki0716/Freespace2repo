@@ -1,8 +1,16 @@
 const mysql = require("mysql2/promise");
+const url = require("url");
 
 // 非同期で接続プールを作成する関数
 async function createPool() {
     try {
+        // DB_URL 環境変数から MySQL の接続情報を取得
+                const dbUrl = process.env.DB_URL; // 例: "mysql://user:password@host:port/database"
+                
+                // URLを解析して接続情報を抽出
+                const parsedUrl = url.parse(dbUrl);
+                const [user, password] = parsedUrl.auth.split(":");
+                
         const pool = mysql.createPool({
             host: process.env.DB_HOST,       // 環境変数に設定されたホスト名
             user: process.env.DB_USER,       // 環境変数に設定されたユーザー名
