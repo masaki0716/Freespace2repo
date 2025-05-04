@@ -4,15 +4,24 @@ const url = require("url");
 // 非同期で接続プールを作成する関数
 async function createPool() {
     try {
-        const dbUrl = process.env.DB_URL;
-        const parsedUrl = new URL(dbUrl); // ←ここ重要: `url.parse`は古い
+        // const dbUrl = process.env.DB_URL;
+        // const parsedUrl = new URL(dbUrl); // ←ここ重要: `url.parse`は古い
 
+        // const pool = mysql.createPool({
+        //     host: parsedUrl.hostname,
+        //     port: parsedUrl.port,
+        //     user: parsedUrl.username,
+        //     password: parsedUrl.password,
+        //     database: parsedUrl.pathname.replace("/", ""),
+        //     waitForConnections: true,
+        //     connectionLimit: 10,
+        //     queueLimit: 0
+        // });
         const pool = mysql.createPool({
-            host: parsedUrl.hostname,
-            port: parsedUrl.port,
-            user: parsedUrl.username,
-            password: parsedUrl.password,
-            database: parsedUrl.pathname.replace("/", ""),
+            host: "localhost",
+            user: "root",
+            password: "Masaki.0716",
+            database: "myDB",
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0

@@ -74,6 +74,7 @@ const inputBox = content.querySelector("#inputbox");
 writeBtn.addEventListener("click", () => {
   const inputValue = inputBox.value;
   add_ward(name, inputValue); // 名前も入力値もここで渡せる
+  inputBox.value = "";
 });
 
 // 問題生成ボタンイベント設定
@@ -286,6 +287,6 @@ function generateQuestion(themeName, outputElement) {
     });
 }
 
-  // loadThemes();
+loadThemes();
 
 
