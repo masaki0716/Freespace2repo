@@ -42,7 +42,7 @@
         <textarea id="getploblem" rows="4" cols="50" readonly></textarea>
        <button id="ploblem">問題を生成</button><br><br>
         <input type="text" id="answer" readonly>
-        <button id="getanswer">回答</button>
+        <button id="getanswer">回答を表示</button>
       </div>
       <div class="subcontent" id="add">
           <input type="text" id="inputbox">
