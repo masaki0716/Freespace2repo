@@ -164,7 +164,7 @@ app.post("/generateQuestion", async (req, res) => {
 // 静的ファイル配信
 app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(PORT, (err) => {
+app.listen(PORT, '0.0.0.0', (err) => {
     if (err) {
         console.error("Server start error:", err);
         process.exit(1);
