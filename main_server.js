@@ -5,7 +5,7 @@ const { OpenAI } = require("openai");
 require("dotenv").config(); // .env から API キーを読み込む
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 
 app.use(express.json());
