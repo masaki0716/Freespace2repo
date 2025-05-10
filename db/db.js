@@ -1,27 +1,15 @@
-const mysql = require("mysql2/promise");
-const url = require("url");
+require("dotenv").config();  // .env を読み込む
 
-// 非同期で接続プールを作成する関数
+const mysql = require("mysql2/promise");
+
 async function createPool() {
     try {
-        // const dbUrl = process.env.DB_URL;
-        // const parsedUrl = new URL(dbUrl); // ←ここ重要: `url.parse`は古い
-
-        // const pool = mysql.createPool({
-        //     host: parsedUrl.hostname,
-        //     port: parsedUrl.port,
-        //     user: parsedUrl.username,
-        //     password: parsedUrl.password,
-        //     database: parsedUrl.pathname.replace("/", ""),
-        //     waitForConnections: true,
-        //     connectionLimit: 10,
-        //     queueLimit: 0
-        // });
         const pool = mysql.createPool({
-            host: "localhost",
-            user: "root",
-            password: "Masaki.0716",
-            database: "myDB",
+            host: process.env.DB_HOST,  // .env の DB_HOST を使用
+            port: process.env.DB_PORT || 3306,  // DB_PORT がなければ 3306 を使用
+            user: process.env.DB_USER,  // .env の DB_USER を使用
+            password: process.env.DB_PASS,  // .env の DB_PASS を使用
+            database: process.env.DB_NAME,  // .env の DB_NAME を使用
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
@@ -30,9 +18,9 @@ async function createPool() {
         await pool.query("SELECT 1");
         console.log("✅ MySQL connected");
         return pool;
-    } catch (error) {
-        console.error("❌ DB Connection Failed:", error.message);
-        throw new Error("DB connection failed");
+    } catch (err) {
+        console.error("❌ Connection failed:", err.message);
+        throw err;
     }
 }
 
