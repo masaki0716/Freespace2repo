@@ -287,6 +287,6 @@ function generateQuestion(themeName, outputElement) {
     });
 }
 
-loadThemes();
+// loadThemes();
 
 
