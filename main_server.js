@@ -15,7 +15,8 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // メインページを返す
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "main_front.html"));
+  res.status(200).send("OK");
+    // res.sendFile(path.join(__dirname, "public", "main_front.html"));
 });
 
 // テーブル作成用 API
