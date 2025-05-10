@@ -3,7 +3,12 @@
 const express = require('express');
 const app = express();
 
+
+
+console.log("▶︎ process.env dump:", process.env);
 const port = process.env.PORT || 8080;
+console.log(`▶︎ using port: ${port}`);
+
 
 // ここは一旦コメントアウト
 // // MySQL 接続
