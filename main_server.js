@@ -6,7 +6,7 @@ const app = express();
 
 
 console.log("▶︎ process.env dump:", process.env);
-const port = process.env.PORT || 8080;
+const port = process.env.PORT;
 console.log(`▶︎ using port: ${port}`);
 
 
