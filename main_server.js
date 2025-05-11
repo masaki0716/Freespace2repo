@@ -30,7 +30,7 @@ app.post("/create-theme", async (req, res) => {
     }
     try {
         await createThemeTable(name);
-        await createTheme(name);
+        // await createTheme(name);
         res.send("✅ Table created successfully");
     } catch (err) {
         console.error(err.message);
