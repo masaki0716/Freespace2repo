@@ -4,17 +4,22 @@ const mysql = require("mysql2/promise");
 
 async function createPool() {
     try {
+        const dbUrl = process.env.DB_URL;
+        const dbConfig = new URL(dbUrl);  // URL を分解
+
+        // 接続プールを作成
         const pool = mysql.createPool({
-            host: process.env.DB_HOST,  // .env の DB_HOST を使用
-            port: process.env.DB_PORT || 3306,  // DB_PORT がなければ 3306 を使用
-            user: process.env.DB_USER,  // .env の DB_USER を使用
-            password: process.env.DB_PASS,  // .env の DB_PASS を使用
-            database: process.env.DB_NAME,  // .env の DB_NAME を使用
+            host: dbConfig.hostname,
+            port: dbConfig.port || 3306,  // port がなければ 3306 を使用
+            user: dbConfig.username,
+            password: dbConfig.password,
+            database: dbConfig.pathname.replace('/', ''),  // /の後がDB名
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
         });
 
+        // 接続テスト
         await pool.query("SELECT 1");
         console.log("✅ MySQL connected");
         return pool;
@@ -23,6 +28,9 @@ async function createPool() {
         throw err;
     }
 }
+
+// createPool関数を呼び出すなどして使う
+
 
         //         const pool = mysql.createPool({
 //     host: "localhost",
