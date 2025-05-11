@@ -44,20 +44,28 @@ app.post("/create-theme", async (req, res) => {
 
 // テーマ一覧取得
 app.get("/get-existingthemes", async (req, res) => {
-  const realPool = await pool;
-  const connection = await realPool.getConnection();
+  // const realPool = await pool;
+  // const connection = await realPool.getConnection();
 
-  await connection.query(`
-    CREATE TABLE IF NOT EXISTS themes (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      table_name VARCHAR(255) NOT NULL,
-      date_created DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-  `);
+  // await connection.query(`
+  //   CREATE TABLE IF NOT EXISTS themes (
+  //     id INT AUTO_INCREMENT PRIMARY KEY,
+  //     table_name VARCHAR(255) NOT NULL,
+  //     date_created DATETIME DEFAULT CURRENT_TIMESTAMP
+  //   );
+  // `);
 
-  const [rows] = await connection.query("SELECT * FROM themes");
-  connection.release();
-  res.json(rows);
+  // const [rows] = await connection.query("SELECT * FROM themes");
+  // connection.release();
+  // res.json(rows);
+    try {
+        // db.js の getThemes() を呼び出して、table_name の配列を取得
+        const themes = await getThemes();
+        res.json(themes);
+      } catch (err) {
+        console.error("一覧取得エラー:", err.message);
+        res.status(500).send("❌ Error retrieving themes");
+      }
 });
 
 

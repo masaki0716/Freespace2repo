@@ -84,7 +84,7 @@ async function getThemes() {
 // 新しいテーマを追加する関数
 async function createTheme(name) {
     const pool = await poolPromise; // 非同期でプールを取得
-    await pool.query("INSERT INTO themes (table_name, date) VALUES (?, CURDATE())", [name]);
+    await pool.query("INSERT INTO themes (table_name) VALUES (?)", [name]);
 }
 
 // データ追加関数（word列にmessageを追加）
