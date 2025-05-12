@@ -160,7 +160,7 @@ app.post("/generateQuestion", async (req, res) => {
       const completion = await openai.chat.completions.create({
         model: "gpt-4.1",
         messages: [
-          { role: "system", content: "問題は'〜は何でしょう？'と言ってね" },
+          { role: "system", content: "問題は'〜は何でしょう？'と出題" },
           { role: "user", content: `"${message}"が一意に定まる正解になる問題を100文字以内で作って。` }
         ],
         temperature: 0.7,

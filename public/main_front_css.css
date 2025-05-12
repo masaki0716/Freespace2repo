@@ -103,4 +103,92 @@ tr:nth-child(even) {
 button {
     margin-top: 20px;
 }
+
+  #correct {
+    font-size: 20px;
+    display: inline-block;
+    padding: 20px;
+    margin: 2px;
+    border: 1px solid red;
+    cursor: pointer;
+    background-color: rgba(233, 13, 13, 0.267);
+    color: red;
+    box-shadow: 0 0 6px red;
+    border-radius: 4px;
+    transition: box-shadow 0.3s;
+    width: 200px;
+    text-align: center;
+  }
+  #correct:hover {
+    box-shadow: 0 0 12px red, 0 0 24px red;
+  }
+  
+
+#incorrect {
+  font-size: 20px;
+  display: inline-block;
+  padding: 20px;
+  margin: 2px;
+  border: 1px solid rgb(0, 102, 255);
+  cursor: pointer;
+  background-color: rgba(20, 40, 228, 0.178);
+  color: rgb(0, 102, 255);
+  box-shadow: 0 0 6px rgb(0, 102, 255);
+  border-radius: 4px;
+  transition: box-shadow 0.3s;
+  width: 200px;
+  text-align: center;
+}
+#incorrect:hover {
+  box-shadow: 0 0 12px  rgb(0, 102, 255), 0 0 24px  rgb(0, 102, 255);
+}
+
+/* 親要素にflexboxを使用 */
+.container {
+  display: flex;
+  justify-content: space-between;  /* 要素間のスペースを均等に */
+  width: 100%;                    /* 親要素の幅を画面いっぱいに */
+  align-items: center;            /* 縦方向に中央揃え */
+}
+
+/* #answer のスタイル */
+#answer {
+  font-size: 30px;
+  padding: 20px;
+  margin: 2px;
+  border: 1px solid white;
+  cursor: pointer;
+  background-color: rgba(109, 106, 106, 0.938);
+  color: white;
+  box-shadow: 0 0 6px white;
+  border-radius: 4px;
+  transition: box-shadow 0.3s;
+  flex: 5;  /* 幅を全体の5分の1に設定 */
+  text-align: center;
+}
+
+/* #getanswer のスタイル */
+#getanswer {
+  font-size: 15px;
+  display: flex;                     /* flexboxを使って中央揃え */
+  align-items: center;               /* 縦方向の中央揃え */
+  justify-content: center;           /* 横方向の中央揃え */
+  padding: 20px;
+  margin: 2px;
+  border: 1px solid white;
+  cursor: pointer;
+  background-color: rgba(109, 106, 106, 0.938);
+  color: white;
+  box-shadow: 0 0 6px white;
+  border-radius: 4px;
+  transition: box-shadow 0.3s;
+  flex: 1;                           /* 幅を全体の5分の1に設定 */
+  height: 50px;                      /* 高さを固定 */
+  text-align: center;
+}
+
+#getanswer:hover {
+  box-shadow: 0 0 12px white, 0 0 24px  white;
+}
+
   

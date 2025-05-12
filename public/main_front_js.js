@@ -3,7 +3,7 @@
 
   async function loadThemes() {
     try {
-      const response = await fetch("/get-existingthemes"); // ← typo 修正済み
+      const response = await fetch("/get-existingthemes");
 // サーバーにリクエスト
       const themesList = await response.json(); // テーマのリストを受け取る
   
@@ -42,7 +42,9 @@
         <textarea id="getploblem" rows="4" cols="50" readonly></textarea>
        <button id="ploblem">問題を生成</button><br><br>
         <input type="text" id="answer" readonly>
-        <button id="getanswer">回答を表示</button>
+        <button id="getanswer">回答を表示</button><br>
+        <button id="correct" type="button">正解！</button>
+        <button id="incorrect" type="button">不正解</button>
       </div>
       <div class="subcontent" id="add">
           <input type="text" id="inputbox">
@@ -67,7 +69,7 @@
     `;
     themeContents.appendChild(content);
 
-    // ...content.innerHTML = `...` のあとに追加
+    
 const writeBtn = content.querySelector("#write_db");
 const inputBox = content.querySelector("#inputbox");
 
