@@ -1,26 +1,26 @@
-require("dotenv").config();  // .env を読み込む
+require("dotenv").config();  
 
 const mysql = require("mysql2/promise");
 
 async function createPool() {
     try {
         const dbUrl = process.env.DB_URL;
-        const dbConfig = new URL(dbUrl);  // URL を分解
+        const dbConfig = new URL(dbUrl);  //URLを分解
 
-        // 接続プールを作成
+        // 接続プール　pool:オブジェクト
         const pool = mysql.createPool({
             host: dbConfig.hostname,
-            port: dbConfig.port || 3306,  // port がなければ 3306 を使用
+            port: dbConfig.port || 3306,  
             user: dbConfig.username,
             password: dbConfig.password,
-            database: dbConfig.pathname.replace('/', ''),  // /の後がDB名
+            database: dbConfig.pathname.replace('/', ''), //"/"を除く
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
         });
 
         // 接続テスト
-        await pool.query("SELECT 1");
+        await pool.query("SELECT 1");//シンプルクエリ(命令)
         console.log("✅ MySQL connected");
         return pool;
     } catch (err) {
@@ -29,22 +29,7 @@ async function createPool() {
     }
 }
 
-// createPool関数を呼び出すなどして使う
-
-
-        //         const pool = mysql.createPool({
-//     host: "localhost",
-//     user: "root",
-//     password: "Masaki.0716",
-//     database: "myDB",
-//     waitForConnections: true,
-//     connectionLimit: 10,
-//     queueLimit: 0
-// });
-
-
-// 非同期でプールを作成し、接続確認を行ったプールを利用
-const poolPromise = createPool(); // 非同期で作成したプールを利用
+const poolPromise = createPool(); //poolを返すまでの待ち
 
 // テーブル作成用関数
 async function createThemeTable(name) {
@@ -91,7 +76,7 @@ async function createTheme(name) {
 async function insertWord(tableName, word) {
     const pool = await poolPromise; // 非同期でプールを取得
     const query = `INSERT INTO \`${tableName}\` (word, date) VALUES (?, NOW())`;
-    await pool.query(query, [word]);
+    await pool.query(query, [word]);//word:プレースホルダー方式(安全)
 }
 
 module.exports = { createThemeTable, pool: poolPromise, getThemes, createTheme, insertWord };

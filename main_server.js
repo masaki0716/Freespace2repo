@@ -3,9 +3,9 @@
 
 const express = require("express");
 const path = require("path");
-const { createThemeTable, pool, createTheme, getThemes, insertWord } = require("./db/db"); // db.js からインポート
+const { createThemeTable, pool, createTheme, getThemes, insertWord } = require("./db/db"); 
 const { OpenAI } = require("openai");
-require("dotenv").config(); // .env から API キーを読み込む
+require("dotenv").config(); 
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -54,18 +54,10 @@ app.get("/get-existingthemes", async (req, res) => {
       date_created DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
-
+  //themes=[rows(データそのもの),fields(カラムの定義)]
   const [rows] = await connection.query("SELECT * FROM themes");
-  connection.release();
+  connection.release();//プールに返す
   res.json(rows);
-    // try {
-    //     // db.js の getThemes() を呼び出して、table_name の配列を取得
-    //     const themes = await getThemes();
-    //     res.json(themes);
-    //   } catch (err) {
-    //     console.error("一覧取得エラー:", err.message);
-    //     res.status(500).send("❌ Error retrieving themes");
-    //   }
 });
 
 
@@ -104,10 +96,10 @@ app.post("/create-newtheme", async (req, res) => {
 
 // テーマへ単語追加
 app.post("/write/:name", async (req, res) => {
-    const tableName = req.params.name;
-    const message = req.body.message;
+    const tableName = req.params.name;//params：URLのname
+    const message = req.body.message;//params：URLのmassage
     try {
-        await insertWord(tableName, message);
+        await insertWord(tableName, message);//db76
         res.json({ success: true, message: "データ追加成功" });
     } catch (err) {
         console.error("挿入エラー:", err);
@@ -115,58 +107,52 @@ app.post("/write/:name", async (req, res) => {
     }
 });
 
-// ランダム単語取得エンドポイント
-// サーバー起動時のどこか、ルート定義の前に
-// テーブルごとに現在の ID を保持するマップ
-const sequentialIndices = {};
 
-// GET /get-sequential/:name
+const sequentialIndices = {};
 app.get("/get-sequential/:name", async (req, res) => {
   const realPool = await pool;
   const tableName = req.params.name;
-  let current = sequentialIndices[tableName] || 1;
+  let current = sequentialIndices[tableName] || 1;//{テーマ１:2,テーマ2:5,,}なければid=1
 
   try {
-    const [rows] = await realPool.query(
+    let [rows] = await realPool.query(
       `SELECT * FROM \`${tableName}\` WHERE id = ?`, 
       [current]
     );
 
-    if (rows.length === 0) {
+    if (rows.length === 0) {// 該当IDが存在しなければ、id=1にリセットして再取得
       current = 1;
-      const [resetRows] = await realPool.query(
+      [rows] = await realPool.query(
         `SELECT * FROM \`${tableName}\` WHERE id = ?`, 
         [current]
       );
-      if (resetRows.length === 0) {
+
+      if (rows.length === 0) {//id=1もなければエラー
         return res.status(404).json({ message: "No word found" });
       }
-      sequentialIndices[tableName] = 2;
-      return res.json(resetRows[0]);
     }
 
-    sequentialIndices[tableName] = current + 1;
-    return res.json(rows[0]);
+    sequentialIndices[tableName] = current + 1;//idがあれば次回継続
+    return res.json(rows[0]);//rows[0]={id:x,word:xxx,level:xx}
 
   } catch (err) {
-    console.error("Sequential fetch error:", err);
-    return res.status(500).json({ error: "Error fetching word" });
+    console.error("単語取得エラー:", err);
+    return res.status(500).json({ error: "単語の取得中にエラーが発生しました" });
   }
 });
 
-app.post("/generateQuestion", async (req, res) => {
-    const { message, id } = req.body;          // id を受け取る
+app.post("/generateQuestion", async (req, res) => {//ma268
+    const { message, id } = req.body;      
     try {
-      const completion = await openai.chat.completions.create({
+      const completion = await openai.chat.completions.create({//APIレスポンス全体
         model: "gpt-4.1",
         messages: [
-          { role: "system", content: "問題は'〜は何でしょう？'と出題" },
-          { role: "user", content: `"${message}"が一意に定まる正解になる問題を100文字以内で作って。` }
+          { role: "system", content: "出力は『〇〇は何でしょう？』の形式。答えが一意に定まる短い問題を作る。" },
+          { role: "user", content: `"${message}"が正解になる問題を1つ作って。` }
         ],
-        temperature: 0.7,
+        temperature: 0.5,
       });
-      const question = completion.choices[0].message.content;
-      // id も一緒に返す
+      const question = completion.choices[0].message.content;//問題文
       res.json({ question, id });
     } catch (err) {
       console.error("Error generating question:", err);

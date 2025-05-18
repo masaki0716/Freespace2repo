@@ -1,14 +1,13 @@
-  const themes = document.getElementById("themes");
-  const themeContents = document.getElementById("themeContents");
+  const themes = document.getElementById("themes");//上部タブ
+  const themeContents = document.getElementById("themeContents");//下部タブ
 
   async function loadThemes() {
-    try {
-      const response = await fetch("/get-existingthemes");
-// サーバーにリクエスト
-      const themesList = await response.json(); // テーマのリストを受け取る
+    try {//非エラー時←→エラー(catch)
+      const response = await fetch("/get-existingthemes");//ser46 HTTPres全体情報取得
+      const themesList = await response.json(); // jsonになった情報のみ取得
   
       themesList.forEach(theme => {
-        createTheme(theme.table_name); // ← 正しいキーを参照
+        createTheme(theme.table_name);//18
       });
       
     } catch (error) {
@@ -23,7 +22,7 @@
     tab.textContent = name; //タブで目で見る部分
     tab.dataset.theme = name; //プログラム内で処理する名前
     //↑HTMLだと <div class="tab" data-theme="テーマ1"> テーマ1 </div>
-    themes.appendChild(tab); //作ったタブを、<div id="themes">の中に追加する
+    themes.appendChild(tab); //69 作ったタブを、<div id="themes">の中に追加する
     // ↓ここまでで
     //   <div id="themes">
     //      <div class="tab" data-theme="テーマ1">テーマ1</div>
@@ -34,8 +33,9 @@
     const content = document.createElement("div");// <div>を作成する
     content.className = "content";
     content.id = name;
+    //innerHTML:content内のhtml全て書き換え
     content.innerHTML = `
-      <div class="subtab" data-page="quiz">問題</div>
+      <div class="subtab" data-page="quiz">${name}の問題</div>
       <div class="subtab" data-page="add">追加</div>
       <div class="subtab" data-page="list">一覧</div>
       <div class="subcontent" id="quiz">
@@ -61,34 +61,33 @@
               </tr>
             </thead>
           <tbody>
-            <!-- JSでデータ行を追加 -->
+
         </tbody>
           </table>
       </div>
 
     `;
-    themeContents.appendChild(content);
+    themeContents.appendChild(content);//タブ、サブタブ生成
 
     
-const writeBtn = content.querySelector("#write_db");
-const inputBox = content.querySelector("#inputbox");
+const writeBtn = content.querySelector("#write_db");//追加ボタン
+const inputBox = content.querySelector("#inputbox");//追加ボックス
 
 writeBtn.addEventListener("click", () => {
   const inputValue = inputBox.value;
-  add_ward(name, inputValue); // 名前も入力値もここで渡せる
+  add_ward(name, inputValue); //234 名前も入力値もここで渡せる
   inputBox.value = "";
 });
 
 // 問題生成ボタンイベント設定
-const problemBtn = content.querySelector("#ploblem");
-const outputBox = content.querySelector("#getploblem");
-
-const answerBtn = content.querySelector("#getanswer");
-const answerTxt = content.querySelector("#answer");
+const problemBtn = content.querySelector("#ploblem");//# : 一致するID ボタン
+const outputBox = content.querySelector("#getploblem");// txt表示
+const answerBtn = content.querySelector("#getanswer");//回答表示ボタン
+const answerTxt = content.querySelector("#answer");//回答txt表示
 
 problemBtn.addEventListener("click", () => {
   answerTxt.value = "";
-  generateQuestion(name, outputBox);
+  generateQuestion(name, outputBox);//256
 });
 
 answerBtn.addEventListener("click", () => {
@@ -99,7 +98,7 @@ answerBtn.addEventListener("click", () => {
 });
 
 
-    activateTab(tab);
+    activateTab(tab);//167
 
     tab.addEventListener("click", () => activateTab(tab));
 
@@ -165,7 +164,7 @@ answerBtn.addEventListener("click", () => {
   
 
 
-  function activateTab(tab) {
+  function activateTab(tab) {//101
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
 
@@ -232,14 +231,14 @@ document.getElementById("removeTheme").addEventListener("click", () => {
   });
 
   function add_ward(name, message) {
-    fetch(`/write/${name}`, {
+    fetch(`/write/${name}`, {//ser98
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json",//データはjsonと伝える
       },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ message })//messageをjsonに変換
     })
-    .then(response => response.json())
+    .then(response => response.json())//resが帰ってきた後の処理
     .then(data => {
       console.log("サーバーからの応答：", data);
       alert("データベースに追加されました");
@@ -250,34 +249,33 @@ document.getElementById("removeTheme").addEventListener("click", () => {
     });
   }
 
-  // テーマごとの lastWord と lastId を管理
-const lastWordMap = {};
-const lastIdMap   = {};
+  
+const lastWordMap = {};//回答用
+const lastIdMap   = {};//使わないがid保持
 
-function generateQuestion(themeName, outputElement) {
+function generateQuestion(themeName, outputElement) {//90　問題生成(id,問題文)
   outputElement.value = "生成中...";
 
-  fetch(`/get-sequential/${themeName}`)
-    .then(res => {
-      if (!res.ok) throw new Error("404");
+  fetch(`/get-sequential/${themeName}`)//ser114
+    .then(res => {//id=xのrows,json形式
+      if (!res.ok) throw new Error("404");//404:not found
       return res.json();
     })
-    .then(data => {
+    .then(data => {//Promiseチェーン　前のthenのreturnを受けとる
       // data には .id, .word, .level, .date が含まれる
       const { id, word } = data;
       lastWordMap[themeName] = word;  // あとで回答表示用に保持
-      // 次に generateQuestion へ id も投げる
-      return fetch("/generateQuestion", {
+      return fetch("/generateQuestion", {//ser144
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: word, id })
       });
     })
-    .then(res => res.json())
+    .then(res => res.json())//{問題文,id}
     .then(result => {
       // result.question, result.id が返ってくる
       outputElement.value = result.question || "問題生成に失敗しました";
-      lastIdMap[themeName] = result.id;  // こちらも保持
+      lastIdMap[themeName] = result.id;
     })
     .catch(error => {
       console.error("問題生成エラー:", error);

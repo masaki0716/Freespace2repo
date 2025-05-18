@@ -1,41 +1,35 @@
+/* 全体の色 */
 body {
     background-color: black;
-    color: orange;
     font-family: Arial, sans-serif;
   }
   
-  /* タブとサブタブ */
   .tab, .subtab {
     display: inline-block;
-    padding: 20px;
-    margin: 2px;
-    border: 1px solid orange;
-    cursor: pointer;
+    padding: 20px;/*枠と文字のスペース*/
+    margin: 2px;/*周りの要素とのスペース*/
+    border: 1px solid orange;/*solid : 直線*/
+    cursor: pointer;/*カーソルを合わせると矢印*/
     background-color: black;
     color: orange;
-    box-shadow: 0 0 6px orange;
-    border-radius: 4px;
-    transition: box-shadow 0.3s; /* transitionをまとめる */
+    box-shadow: 0 0 6px  orange;
+    border-radius: 4px;/*角の丸さ*/
+    transition: box-shadow 0.3s;/*0.3sで影になる*/
   }
-  
-  /* ホバー時のスタイル */
+  /**/
   .tab:hover, .subtab:hover {
     box-shadow: 0 0 12px orange, 0 0 24px orange;
   }
-  
-  /* アクティブなタブ */
   .active {
     background-color: #220000;
     box-shadow: 0 0 16px orange;
   }
-  
-  /* コンテンツ部分 */
+
   .content {
-    display: none;
+    display: none;/*「非subtabを非表示」*/
     padding: 10px;
     border: 1px solid orange;
     background-color: black;
-    color: orange;
     box-shadow: 0 0 30px orange;
     border-radius: 4px;
     margin-top: 8px;
@@ -44,13 +38,13 @@ body {
   .subcontent {
     display: none;
     padding: 10px;
-    border: 1px solid black;
+    border: 1px solid orange;
     background-color: black;
     color: orange;
     border-radius: 4px;
     margin-top: 8px;
   }
-  
+   /*subtab内の.showを表示*/
   .show {
     display: block;
   }
@@ -62,7 +56,6 @@ body {
     margin-right: 8px;
     justify-content: center;
     align-items: center;
-    height: auto;
   }
   
   .control-buttons button {
@@ -77,31 +70,22 @@ body {
     border-radius: 4px;
     box-shadow: 0 0 60px lightblue;
     cursor: pointer;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease ;
   }
   
   .control-buttons button:hover {
-    box-shadow: 0 0 12px orange, 0 0 24px orange;
+    box-shadow: 0 0 12px lightblue, 0 0 24px lightblue;
   }
 
   table {
     border-collapse: collapse;
-    width: 100%;
+    width: 80%;
     margin-top: 20px;
 }
 th, td {
     border: 1px solid orange;
     padding: 8px;
     text-align: left;
-}
-th {
-    background-color: black;
-}
-tr:nth-child(even) {
-    background-color:black;
-}
-button {
-    margin-top: 20px;
 }
 
   #correct {
@@ -143,15 +127,8 @@ button {
   box-shadow: 0 0 12px  rgb(0, 102, 255), 0 0 24px  rgb(0, 102, 255);
 }
 
-/* 親要素にflexboxを使用 */
-.container {
-  display: flex;
-  justify-content: space-between;  /* 要素間のスペースを均等に */
-  width: 100%;                    /* 親要素の幅を画面いっぱいに */
-  align-items: center;            /* 縦方向に中央揃え */
-}
 
-/* #answer のスタイル */
+
 #answer {
   font-size: 30px;
   padding: 20px;
@@ -167,12 +144,11 @@ button {
   text-align: center;
 }
 
-/* #getanswer のスタイル */
 #getanswer {
   font-size: 15px;
-  display: flex;                     /* flexboxを使って中央揃え */
-  align-items: center;               /* 縦方向の中央揃え */
-  justify-content: center;           /* 横方向の中央揃え */
+  display: flex;                     
+  align-items: center;               
+  justify-content: center;         
   padding: 20px;
   margin: 2px;
   border: 1px solid white;
@@ -182,8 +158,8 @@ button {
   box-shadow: 0 0 6px white;
   border-radius: 4px;
   transition: box-shadow 0.3s;
-  flex: 1;                           /* 幅を全体の5分の1に設定 */
-  height: 50px;                      /* 高さを固定 */
+  flex: 1;                          
+  height: 50px;                    
   text-align: center;
 }
 
